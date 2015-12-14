@@ -14,7 +14,7 @@ public class main {
         System.out.println("Sheep count: " +landscape.getSheepCount());
         System.out.println("Wolf count: " +landscape.getWolfCount());
 
-        for(int i=0; i<10; i++){
+        for(int i=0; i<1; i++){
             landscape.step();
             landscape.print();
         }

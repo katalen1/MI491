@@ -138,22 +138,34 @@ public class Landscape {
     }
 
     public void spread(int X, int Y){
-        HashMap<Integer, Integer> openTiles = new HashMap();
         Random rand = new Random();
-        List openRow = new ArrayList<>();
+        ArrayList<Integer> openRow = new ArrayList<>();
+        ArrayList<Integer> openCol = new ArrayList<>();
+        System.out.println(X +" "+ Y);
 
-        for(int i = X-1; i<X+1; i++){
-            for(int j = Y-1; i<Y+1; j++){
-                if(this.landscape[i%this.rows][j%this.columns] == " "){
-                    openTiles.put(i,j);
-                    openRow.add(i%this.rows);
+        for(int i = (X-1)%this.rows; i<X+1; i++){
+            if(i<0){
+                i=100+i;
+            }
+            for(int j = (Y-1)%this.columns; j<Y+1; j++){
+                if(j<0){
+                    j=100+i;
+                }
+                if(this.landscape[i][j] == " "){
+                    openRow.add(i);
+                    openCol.add(j);
                 }
             }
         }
 
-        int randomTile = rand.nextInt(openTiles.size());
-        int row = (int) openRow.get(randomTile);
-        this.landscape[row][openTiles.get(row)] = new Grass();
+        if(openRow.size() != 0) {
+            int randomTile = rand.nextInt(openRow.size());
+            int row = openRow.get(randomTile);
+            int col = openCol.get(randomTile);
+            System.out.println(row + " " + col);
+            delete(row, col);
+            this.landscape[row][col] = new Grass();
+        }
     }
 
     public void step() {
@@ -161,6 +173,10 @@ public class Landscape {
             for (int j = 0; j < this.columns; j++) {
                 if (this.landscape[i][j] instanceof Grass) {
                     spread(i, j);
+                }if(this.landscape[i][j] instanceof Sheep){
+                    Sheep sheep = (Sheep) landscape[i][j];
+                    sheep.age();
+                    System.out.print(i + " " + j + " " + sheep.getAge());
                 }
             }
         }

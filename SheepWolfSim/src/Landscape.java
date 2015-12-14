@@ -1,6 +1,6 @@
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by bigka on 12/14/2015.
@@ -134,6 +134,35 @@ public class Landscape {
                 }
             }
             System.out.println();
+        }
+    }
+
+    public void spread(int X, int Y){
+        HashMap<Integer, Integer> openTiles = new HashMap();
+        Random rand = new Random();
+        List openRow = new ArrayList<>();
+
+        for(int i = X-1; i<X+1; i++){
+            for(int j = Y-1; i<Y+1; j++){
+                if(this.landscape[i%this.rows][j%this.columns] == " "){
+                    openTiles.put(i,j);
+                    openRow.add(i%this.rows);
+                }
+            }
+        }
+
+        int randomTile = rand.nextInt(openTiles.size());
+        int row = (int) openRow.get(randomTile);
+        this.landscape[row][openTiles.get(row)] = new Grass();
+    }
+
+    public void step() {
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                if (this.landscape[i][j] instanceof Grass) {
+                    spread(i, j);
+                }
+            }
         }
     }
 }

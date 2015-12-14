@@ -24,4 +24,37 @@ public class Wolf extends Landscape {
             return "F";
         }
     }
+
+    public int getAge() {
+        return this.age;
+    }
+
+    public int getHunger() {
+        return this.hunger;
+    }
+
+    public int getReprodCounter() {
+        return this.reprodCounter;
+    }
+
+    public int getSearchRad() {
+        return this.searchRad;
+    }
+
+    public String getGender() {
+        return this.gender;
+    }
+
+    public void age(){
+        this.age +=1;
+    }
+
+    public void eat(){
+        this.hunger = 10;
+    }
+
+    public void reproduced(){
+        this.reprodCounter = 5;
+    }
+
 }

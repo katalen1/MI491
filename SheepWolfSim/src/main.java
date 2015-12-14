@@ -6,6 +6,7 @@ public class main {
 
     public static void main(String args[]) {
         Landscape landscape = new Landscape();
+        landscape.clear();
         landscape.populate(20,20,20);
         landscape.count();
         landscape.print();

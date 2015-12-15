@@ -228,12 +228,24 @@ public class Landscape {
             ArrayList<Integer> grassCol = new ArrayList<>();
             ArrayList<Integer> openRow = new ArrayList<>();
             ArrayList<Integer> openCol = new ArrayList<>();
+
             try {
-                for (int i = (x - 2)%this.rows; i < x + 2; i++) {
-                    if (i < 0) {
-                        i = this.rows + i;
-                    }
-                    for (int j = (y - 2)%this.columns; j < y + 2; j++) {
+
+                int o = x-1;
+                int p = y-1;
+
+                if(o<0){
+                    o+=this.rows;
+                }else if(x>this.rows){
+                    o=o%this.rows;
+                }
+                if(p<0){
+                    p+=this.rows;
+                }else if(p>this.rows){
+                    p=p%this.rows;
+                }
+                for (int i = o; i < o + 4; i++) {
+                    for (int j = p; j < p + 4; j++) {
                         if (j < 0) {
                             j = this.columns + j;
                         }
@@ -273,15 +285,23 @@ public class Landscape {
             ArrayList<Integer> sheepCol = new ArrayList<>();
             ArrayList<Integer> openRow = new ArrayList<>();
             ArrayList<Integer> openCol = new ArrayList<>();
+            int o = x-1;
+            int p = y-1;
+
+            if(o<0){
+                o+=this.rows;
+            }else if(x>this.rows){
+                o=o%this.rows;
+            }
+            if(p<0){
+                p+=this.rows;
+            }else if(p>this.rows){
+                p=p%this.rows;
+            }
+
             try {
-                for (int i = (x - 3) % this.rows; i < x + 3; i++) {
-                    if (i < 0) {
-                        i = this.rows + i;
-                    }
-                    for (int j = (y - 3) % this.columns; j < y + 3; j++) {
-                        if (j < 0) {
-                            j = this.columns + j;
-                        }
+                for (int i = o; i < o+6; i++) {
+                    for (int j = p; j < p + 6; j++) {
                         if (this.landscape[i][j] instanceof Sheep) {
                             sheepRow.add(i);
                             sheepCol.add(j);
@@ -320,15 +340,22 @@ public class Landscape {
         ArrayList<Integer> openRow = new ArrayList<>();
         ArrayList<Integer> openCol = new ArrayList<>();
         boolean oppGenderPresent = false;
+        int o = x-1;
+        int p = y-1;
+
+        if(o<0){
+            o+=this.rows;
+        }else if(o>this.rows){
+            o=o%this.rows;
+        }
+        if(p<0){
+            p+=this.rows;
+        }else if(p>this.rows){
+            p=p%this.rows;
+        }
         try {
-            for (int i = (x - 1) % this.rows; i < x + 1; i++) {
-                if (i < 0) {
-                    i = this.rows + i;
-                }
-                for (int j = (y - 1) % this.columns; j < y + 1; j++) {
-                    if (j < 0) {
-                        j = this.columns + i;
-                    }
+            for (int i = o ; i < o + 2; i++) {
+                for (int j = p; j < p + 2; j++) {
                     if (this.landscape[i][j] == null) {
                         openRow.add(i);
                         openCol.add(j);

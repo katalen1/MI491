@@ -56,9 +56,10 @@ public class Sheep implements Grows, Eats {
     public void grow(){
         this.age+=1;
         this.hunger-=1;
+        this.reprodCounter-=1;
     }
 
     public void reproduced(){
-        this.reprodCounter = 5;
+        this.reprodCounter = 2;
     }
 }

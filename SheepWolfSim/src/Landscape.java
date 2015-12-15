@@ -16,10 +16,14 @@ public class Landscape {
     int grassCount;
     int sheepCount;
     int wolfCount;
+    int mSheep;
+    int fSheep;
+    int mWolf;
+    int fWolf;
 
     //Constructors
     public Landscape(){
-        this.landscape = new Grows[100][100];
+        this.landscape = new Grows[50][50];
         this.rows = 50;
         this.columns = 50;
         this.steps = 100;
@@ -62,6 +66,14 @@ public class Landscape {
     public int getWolfCount(){
         return this.wolfCount;
     }
+
+    public int getMSheep(){return this.mSheep;}
+
+    public int getFSheep(){return this.fSheep;}
+
+    public int getMWolf(){return this.mWolf;}
+
+    public int getFWolf(){return this.fWolf;}
 
     public void clear(){
         for(int i=0; i<this.rows; i++){
@@ -110,6 +122,10 @@ public class Landscape {
         this.grassCount = 0;
         this.sheepCount = 0;
         this.wolfCount = 0;
+        this.mSheep =0;
+        this.fSheep =0;
+        this.mWolf =0;
+        this.fSheep =0;
 
         for(int i=0; i<this.rows; i++){
             for(int j=0; j<this.columns; j++){
@@ -117,8 +133,18 @@ public class Landscape {
                     this.grassCount +=1;
                 }else if(this.landscape[i][j] instanceof Sheep){
                     this.sheepCount +=1;
+                    if(((Eats)this.landscape[i][j]).getGender() == "M"){
+                        mSheep+=1;
+                    }else  if(((Eats)this.landscape[i][j]).getGender() == "F"){
+                        fSheep+=1;
+                    }
                 }else if(this.landscape[i][j] instanceof Wolf){
                     this.wolfCount +=1;
+                    if(((Eats)this.landscape[i][j]).getGender() == "M"){
+                        mWolf+=1;
+                    }else  if(((Eats)this.landscape[i][j]).getGender() == "F"){
+                        fWolf+=1;
+                    }
                 }
             }
         }
@@ -192,15 +218,24 @@ public class Landscape {
                 Random rand = new Random();
                 ArrayList<Integer> openRow = new ArrayList<>();
                 ArrayList<Integer> openCol = new ArrayList<>();
+
+                int o = x-((Eats)landscape[x][y]).getSearchRad();
+                int p = y-((Eats)landscape[x][y]).getSearchRad();
+
+                if(o<0){
+                    o+=this.rows;
+                }else if(x>this.rows){
+                    o=o%this.rows;
+                }
+                if(p<0){
+                    p+=this.rows;
+                }else if(p>this.rows){
+                    p=p%this.rows;
+                }
+
                 try {
-                    for (int i = (x - ((Eats)landscape[x][y]).getSearchRad()) % this.rows; i < x + ((Eats)landscape[x][y]).getSearchRad(); i++) {
-                        if (i < 0) {
-                            i = this.rows + i;
-                        }
-                        for (int j = (y - ((Eats)landscape[x][y]).getSearchRad()) % this.columns; j < y + ((Eats)landscape[x][y]).getSearchRad(); j++) {
-                            if (j < 0) {
-                                j = this.columns + j;
-                            }
+                    for (int i = o; i < o + ((Eats)landscape[x][y]).getSearchRad()*2; i++) {
+                        for (int j = p; j < p +((Eats)landscape[x][y]).getSearchRad()*2; j++) {
                             if (this.landscape[i][j] == null) {
                                 openRow.add(i);
                                 openCol.add(j);
@@ -240,15 +275,12 @@ public class Landscape {
                     o=o%this.rows;
                 }
                 if(p<0){
-                    p+=this.rows;
-                }else if(p>this.rows){
-                    p=p%this.rows;
+                    p+=this.columns;
+                }else if(p>this.columns){
+                    p=p%this.columns;
                 }
                 for (int i = o; i < o + 4; i++) {
                     for (int j = p; j < p + 4; j++) {
-                        if (j < 0) {
-                            j = this.columns + j;
-                        }
                         if (this.landscape[i][j] instanceof Grass) {
                             grassRow.add(i);
                             grassCol.add(j);
@@ -294,9 +326,9 @@ public class Landscape {
                 o=o%this.rows;
             }
             if(p<0){
-                p+=this.rows;
-            }else if(p>this.rows){
-                p=p%this.rows;
+                p+=this.columns;
+            }else if(p>this.columns){
+                p=p%this.columns;
             }
 
             try {
@@ -349,9 +381,9 @@ public class Landscape {
             o=o%this.rows;
         }
         if(p<0){
-            p+=this.rows;
-        }else if(p>this.rows){
-            p=p%this.rows;
+            p+=this.columns;
+        }else if(p>this.columns){
+            p=p%this.columns;
         }
         try {
             for (int i = o ; i < o + 2; i++) {

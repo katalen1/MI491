@@ -1,7 +1,7 @@
 /**
  * Created by bigka on 12/14/2015.
  */
-public class Wolf extends Landscape {
+public class Wolf implements Grows, Eats {
     int age;
     int hunger;
     int reprodCounter;
@@ -25,7 +25,7 @@ public class Wolf extends Landscape {
         }
     }
 
-    public int getAge() {
+    public int getSize() {
         return this.age;
     }
 
@@ -45,11 +45,12 @@ public class Wolf extends Landscape {
         return this.gender;
     }
 
-    public void age(){
+    public void grow(){
         this.age +=1;
+        this.hunger-=1;
     }
 
-    public void eat(){
+    public void eats(int size){
         this.hunger = 10;
     }
 

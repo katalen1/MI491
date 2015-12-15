@@ -2,7 +2,7 @@
 /**
  * Created by bigka on 12/14/2015.
  */
-public class Sheep extends Landscape {
+public class Sheep implements Grows, Eats {
     int age;
     int hunger;
     int reprodCounter;
@@ -26,7 +26,7 @@ public class Sheep extends Landscape {
         }
     }
 
-    public int getAge() {
+    public int getSize() {
         return this.age;
     }
 
@@ -46,15 +46,16 @@ public class Sheep extends Landscape {
         return this.gender;
     }
 
-    public void eat(int size){
+    public void eats(int size){
         this.hunger += size;
         if(this.hunger > 10){
             this.hunger = 10;
         }
     }
 
-    public void age(){
+    public void grow(){
         this.age+=1;
+        this.hunger-=1;
     }
 
     public void reproduced(){

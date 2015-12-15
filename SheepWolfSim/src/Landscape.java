@@ -145,15 +145,25 @@ public class Landscape {
         Random rand = new Random();
         ArrayList<Integer> openRow = new ArrayList<>();
         ArrayList<Integer> openCol = new ArrayList<>();
+        int x = X-1;
+        int y = Y-1;
+        if(x<0){
+            x+=this.rows;
+        }else if(x>this.rows){
+            x=x%this.rows;
+        }
+        if(y<0){
+            y+=this.rows;
+        }else if(y>this.rows){
+            y=y%this.rows;
+        }
+
+
         try {
-            for (int i = (X - 1) % this.rows; i < X + 1; i++) {
-                if (i < 0) {
-                    i = 100 + i;
-                }
-                for (int j = (Y - 1) % this.columns; j < Y + 1; j++) {
-                    if (j < 0) {
-                        j = 100 + i;
-                    }
+
+            for (int i=x; i < x + 2; i++) {
+                for (int j = y; j < y + 2; j++) {
+
                     if (this.landscape[i][j] == null) {
                         openRow.add(i);
                         openCol.add(j);
@@ -176,7 +186,7 @@ public class Landscape {
         if(landscape[x][y] instanceof Eats){
             if(((Eats)landscape[x][y]).getHunger() <=5){
                 search(x,y);
-            }else if(((Eats)landscape[x][y]).getHunger() > 5 && ((Eats)landscape[x][y]).getReprodCounter() == 0 && landscape[x][y].getSize() >3){
+            }else if(((Eats)landscape[x][y]).getHunger() > 5 && ((Eats)landscape[x][y]).getReprodCounter() == 0){
                 reproduce(x,y);
             }else{
                 Random rand = new Random();
@@ -185,11 +195,11 @@ public class Landscape {
                 try {
                     for (int i = (x - ((Eats)landscape[x][y]).getSearchRad()) % this.rows; i < x + ((Eats)landscape[x][y]).getSearchRad(); i++) {
                         if (i < 0) {
-                            i = 100 + i;
+                            i = this.rows + i;
                         }
                         for (int j = (y - ((Eats)landscape[x][y]).getSearchRad()) % this.columns; j < y + ((Eats)landscape[x][y]).getSearchRad(); j++) {
                             if (j < 0) {
-                                j = 100 + i;
+                                j = this.columns + j;
                             }
                             if (this.landscape[i][j] == null) {
                                 openRow.add(i);
@@ -219,13 +229,13 @@ public class Landscape {
             ArrayList<Integer> openRow = new ArrayList<>();
             ArrayList<Integer> openCol = new ArrayList<>();
             try {
-                for (int i = (x - 2) % this.rows; i < x + 2; i++) {
+                for (int i = (x - 2)%this.rows; i < x + 2; i++) {
                     if (i < 0) {
-                        i = 100 + i;
+                        i = this.rows + i;
                     }
-                    for (int j = (y - 2) % this.columns; j < y + 2; j++) {
+                    for (int j = (y - 2)%this.columns; j < y + 2; j++) {
                         if (j < 0) {
-                            j = 100 + i;
+                            j = this.columns + j;
                         }
                         if (this.landscape[i][j] instanceof Grass) {
                             grassRow.add(i);
@@ -266,11 +276,11 @@ public class Landscape {
             try {
                 for (int i = (x - 3) % this.rows; i < x + 3; i++) {
                     if (i < 0) {
-                        i = 100 + i;
+                        i = this.rows + i;
                     }
                     for (int j = (y - 3) % this.columns; j < y + 3; j++) {
                         if (j < 0) {
-                            j = 100 + i;
+                            j = this.columns + j;
                         }
                         if (this.landscape[i][j] instanceof Sheep) {
                             sheepRow.add(i);
@@ -313,11 +323,11 @@ public class Landscape {
         try {
             for (int i = (x - 1) % this.rows; i < x + 1; i++) {
                 if (i < 0) {
-                    i = 100 + i;
+                    i = this.rows + i;
                 }
                 for (int j = (y - 1) % this.columns; j < y + 1; j++) {
                     if (j < 0) {
-                        j = 100 + i;
+                        j = this.columns + i;
                     }
                     if (this.landscape[i][j] == null) {
                         openRow.add(i);
@@ -342,10 +352,12 @@ public class Landscape {
             int col = openCol.get(randomTile);
             if(this.landscape[x][y] instanceof Sheep) {
                 this.landscape[row][col] = new Sheep();
+                ((Eats)this.landscape[x][y]).reproduced();
                 System.out.println("Sheep at " +x+" "+y+" and "+row+" "+col+" reproduced");
             }else if(this.landscape[x][y] instanceof Wolf){
                 this.landscape[row][col] = new Wolf();
-                System.out.println("Sheep at " +x+" "+y+" and "+row+" "+col+" reproduced");
+                ((Eats)this.landscape[x][y]).reproduced();
+                System.out.println("Wolf at " +x+" "+y+" and "+row+" "+col+" reproduced");
             }
         }
     }
@@ -368,11 +380,16 @@ public class Landscape {
                         }
                         delete(i,j);
                     }else {
-                        landscape[i][j].grow();
+                        if(step%2==0) {
+                            landscape[i][j].grow();
+                        }
                         move(i, j);
                     }
                 }
             }
         }
+        step++;
     }
 }
+
+

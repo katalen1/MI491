@@ -10,7 +10,7 @@ public class Wolf implements Grows, Eats {
 
     public Wolf(){
         this.age =0;
-        this.hunger = 10;
+        this.hunger = 15;
         this.reprodCounter = 0;
         this.searchRad = 3;
         this.gender = setGender();
@@ -47,16 +47,23 @@ public class Wolf implements Grows, Eats {
 
     public void grow(){
         this.age +=1;
-        this.hunger-=1;
-        this.reprodCounter-=1;
+        if(this.hunger>0) {  //each turn minus one from hunger
+            this.hunger -= 1;
+        }
+        if(this.reprodCounter>0) { //if the wolf has recently reproduced, minus one frm the counter each turn until it reaches 0 again
+            this.reprodCounter -= 1;
+        }
     }
 
     public void eats(int size){
-        this.hunger = 10;
+        this.hunger +=size;
+        if(this.hunger>15){
+            this.hunger=15;
+        }
     }
 
     public void reproduced(){
-        this.reprodCounter = 2;
+        this.reprodCounter = 5;
     }
 
 }

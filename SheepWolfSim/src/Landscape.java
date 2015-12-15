@@ -1,5 +1,3 @@
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -85,40 +83,45 @@ public class Landscape {
 
     public void delete(int X, int Y){
         this.landscape[X][Y] = null;
+    }  //delete an eaten object o
+
+
+   public void populate(int grass, int sheep, int wolf){
+
+       if(grass+sheep+wolf>this.rows*this.columns){ //make sure the user is not trying to over populate the landscape
+           System.out.println("There is not enough room in the Landscape to populate all of these objects.");
+       }else {
+           Random rand = new Random();
+           while (grass != 0) { //randomly populate the landscape
+               int randomRow = rand.nextInt(this.rows); //random row value within range
+               int randomColumn = rand.nextInt(this.columns); //random column value within range
+               if (this.landscape[randomRow][randomColumn] == null) {  //make sure the block is null
+                   this.landscape[randomRow][randomColumn] = new Grass(); //populate
+                   grass -= 1; //minus on from the initial population total
+               }
+           }
+
+           while (sheep != 0) {  //same method as above
+               int randomRow = rand.nextInt(this.rows);
+               int randomColumn = rand.nextInt(this.columns);
+               if (this.landscape[randomRow][randomColumn] == null) {
+                   this.landscape[randomRow][randomColumn] = new Sheep();
+                   sheep -= 1;
+               }
+           }
+
+           while (wolf != 0) {
+               int randomRow = rand.nextInt(this.rows);
+               int randomColumn = rand.nextInt(this.columns);
+               if (this.landscape[randomRow][randomColumn] == null) {
+                   this.landscape[randomRow][randomColumn] = new Wolf();
+                   wolf -= 1;
+               }
+           }
+       }
     }
 
-    public void populate(int grass, int sheep, int wolf){
-        Random rand = new Random();
-        while (grass !=0) {
-            int randomRow = rand.nextInt(this.rows);
-            int randomColumn = rand.nextInt(this.columns);
-            if(this.landscape[randomRow][randomColumn] == null){
-                this.landscape[randomRow][randomColumn] = new Grass();
-                grass -=1;
-            }
-        }
-
-        while (sheep !=0) {
-            int randomRow = rand.nextInt(this.rows);
-            int randomColumn = rand.nextInt(this.columns);
-            if(this.landscape[randomRow][randomColumn] == null){
-                this.landscape[randomRow][randomColumn] = new Sheep();
-                sheep -=1;
-            }
-        }
-
-        while (wolf !=0) {
-            int randomRow = rand.nextInt(this.rows);
-            int randomColumn = rand.nextInt(this.columns);
-            if(this.landscape[randomRow][randomColumn] == null){
-                this.landscape[randomRow][randomColumn] = new Wolf();
-                wolf -=1;
-            }
-        }
-
-    }
-
-    public void count(){
+    public void count(){  //find the number of instances of each object
         this.grassCount = 0;
         this.sheepCount = 0;
         this.wolfCount = 0;
@@ -130,27 +133,27 @@ public class Landscape {
         for(int i=0; i<this.rows; i++){
             for(int j=0; j<this.columns; j++){
                 if(this.landscape[i][j] instanceof Grass){
-                    this.grassCount +=1;
+                    this.grassCount +=1;                                    //if grass object found add 1 to count
                 }else if(this.landscape[i][j] instanceof Sheep){
-                    this.sheepCount +=1;
+                    this.sheepCount +=1;                                    //if sheep object found add 1 to count
                     if(((Eats)this.landscape[i][j]).getGender() == "M"){
-                        mSheep+=1;
+                        mSheep+=1;                                          //if male sheep object found add 1 to count
                     }else  if(((Eats)this.landscape[i][j]).getGender() == "F"){
-                        fSheep+=1;
+                        fSheep+=1;                                          //if female sheep object found add 1 to count
                     }
                 }else if(this.landscape[i][j] instanceof Wolf){
-                    this.wolfCount +=1;
+                    this.wolfCount +=1;                                     //if wolf object found add 1 to count
                     if(((Eats)this.landscape[i][j]).getGender() == "M"){
-                        mWolf+=1;
+                        mWolf+=1;                                           //if male wolf object found add 1 to count
                     }else  if(((Eats)this.landscape[i][j]).getGender() == "F"){
-                        fWolf+=1;
+                        fWolf+=1;                                           //if female wolf object found add 1 to count
                     }
                 }
             }
         }
     }
 
-    public void print(){
+    public void print(){  //iterate through the landscape, when an instance of an object is found print out a designated character that represents the object
         for(int i=0; i<this.rows; i++){
             for(int j=0; j<this.columns; j++){
                 if(this.landscape[i][j] instanceof Grass){
@@ -169,37 +172,35 @@ public class Landscape {
 
     public void spread(int X, int Y){
         Random rand = new Random();
-        ArrayList<Integer> openRow = new ArrayList<>();
-        ArrayList<Integer> openCol = new ArrayList<>();
-        int x = X-1;
-        int y = Y-1;
-        if(x<0){
-            x+=this.rows;
-        }else if(x>this.rows){
-            x=x%this.rows;
-        }
-        if(y<0){
-            y+=this.rows;
-        }else if(y>this.rows){
-            y=y%this.rows;
-        }
-
+        ArrayList<Integer> openRow = new ArrayList<>();  //array to hold x cord of open space
+        ArrayList<Integer> openCol = new ArrayList<>();  //array to hold y cord of open space
 
         try {
 
-            for (int i=x; i < x + 2; i++) {
-                for (int j = y; j < y + 2; j++) {
+            for (int i=X-1; i < X + 1; i++) {
+                for (int j = Y-1; j < Y + 1; j++) {
 
-                    if (this.landscape[i][j] == null) {
-                        openRow.add(i);
-                        openCol.add(j);
+                    if(i<0){                //screen wrapping
+                        i+=this.rows;
+                    }else if(i>this.rows){
+                        i=i%this.rows;
+                    }
+                    if(j<0){
+                        j+=this.rows;
+                    }else if(j>this.rows){
+                        j=j%this.rows;
+                    }
+
+                    if (this.landscape[i][j] == null) { //if block is empty add its position to the arrays
+                        openRow.add(i); //add x cord to array
+                        openCol.add(j); //add y cord to array
                     }
                 }
             }
         }catch (ArrayIndexOutOfBoundsException e){
 
         }
-        if(openRow.size() != 0) {
+        if(openRow.size() != 0) { //as long as there is an open space around, pick one randomly and then populate it with a new instance of grass
             int randomTile = rand.nextInt(openRow.size());
             int row = openRow.get(randomTile);
             int col = openCol.get(randomTile);
@@ -210,11 +211,11 @@ public class Landscape {
 
     public void move(int x, int y){
         if(landscape[x][y] instanceof Eats){
-            if(((Eats)landscape[x][y]).getHunger() <=5){
-                search(x,y);
-            }else if(((Eats)landscape[x][y]).getHunger() > 5 && ((Eats)landscape[x][y]).getReprodCounter() == 0){
-                reproduce(x,y);
-            }else{
+            if(((Eats)landscape[x][y]).getHunger() > 5 && landscape[x][y].getReprodCounter()==0 &&landscape[x][y].getSize()>1){
+                reproduce(x,y); //if the the block is an instance of an Eats object (sheep/wolf) and has over 5 hunger, has not reproduced in the last 5 turns and has been on the landscape for over 2 turns, attempt to reproduce
+            }else if(((Eats)landscape[x][y]).getHunger() <=7) {
+                search(x, y); //if the objects hunger is less than seven actively search for food source
+            }else{ //if object does not meet either of the above conditions move randomly to an open space within the objects search radius. Uses same method as spread() for finding open spaces
                 Random rand = new Random();
                 ArrayList<Integer> openRow = new ArrayList<>();
                 ArrayList<Integer> openCol = new ArrayList<>();
@@ -259,15 +260,14 @@ public class Landscape {
     public void search(int x, int y){
         if(landscape[x][y] instanceof Sheep){
             Random rand = new Random();
-            ArrayList<Integer> grassRow = new ArrayList<>();
-            ArrayList<Integer> grassCol = new ArrayList<>();
-            ArrayList<Integer> openRow = new ArrayList<>();
-            ArrayList<Integer> openCol = new ArrayList<>();
+            ArrayList<Integer> grassRow = new ArrayList<>(); //stores x cord of grass object
+            ArrayList<Integer> grassCol = new ArrayList<>(); //store y cord of grass obj
+            ArrayList<Integer> openRow = new ArrayList<>(); //stores x cord of open space
+            ArrayList<Integer> openCol = new ArrayList<>(); //stores y cord of open space
 
             try {
-
-                int o = x-1;
-                int p = y-1;
+                int o = x-2;        //wrapping
+                int p = y-2;        //search radius 2
 
                 if(o<0){
                     o+=this.rows;
@@ -277,16 +277,16 @@ public class Landscape {
                 if(p<0){
                     p+=this.columns;
                 }else if(p>this.columns){
-                    p=p%this.columns;
+                    p=p%this.columns; //wrapping
                 }
-                for (int i = o; i < o + 4; i++) {
+                for (int i = o; i < o + 4; i++) {       //search radius 2 so we want x-2 -> x +2 or o -> o+4
                     for (int j = p; j < p + 4; j++) {
-                        if (this.landscape[i][j] instanceof Grass) {
-                            grassRow.add(i);
-                            grassCol.add(j);
+                        if (this.landscape[i][j] instanceof Grass) { //search for grass in range
+                            grassRow.add(i);    //add x cord of grass
+                            grassCol.add(j);    //add y cord of grass
                         }else if (this.landscape[i][j] == null) {
-                            openRow.add(i);
-                            openCol.add(j);
+                            openRow.add(i);     //add x cord of open space
+                            openCol.add(j);     //add y cord of openspace
                         }
                     }
                 }
@@ -294,31 +294,31 @@ public class Landscape {
 
             }
 
-            if(grassRow.size() != 0) {
-                int randomTile = rand.nextInt(grassRow.size());
-                int row = grassRow.get(randomTile);
-                int col = grassCol.get(randomTile);
-                int size = landscape[row][col].getSize();
-                delete(row, col);
-                this.landscape[row][col] = this.landscape[x][y];
-                delete(x,y);
-                ((Eats)landscape[row][col]).eats(size);
-                System.out.println("Sheep at " +x+ " " +y+ " move to " +row+ " " +col+ " ate grass size " +size+ " so hunger" + ((Eats)landscape[row][col]).getHunger());
-            }else if(openRow.size() != 0) {
+            if(grassRow.size() != 0) { //if there is a grass object in range
+                int randomTile = rand.nextInt(grassRow.size()); //pick random grass object to eat
+                int row = grassRow.get(randomTile); //get x cord
+                int col = grassCol.get(randomTile); //get y cord
+                int size = landscape[row][col].getSize(); //get size of grass object
+                delete(row, col); //delete grass object
+                this.landscape[row][col] = this.landscape[x][y]; //move sheep to location of old grass obj
+                delete(x,y); //delete the old instance of the sheep that just moved
+                ((Eats)landscape[row][col]).eats(size); //add hunger to sheep based on size of grass it just ate
+                //System.out.println("Sheep at " +x+ " " +y+ " move to " +row+ " " +col+ " ate grass size " +size+ " so hunger" + ((Eats)landscape[row][col]).getHunger()); //for debugging shows instance of when and where a sheep ate grass
+            }else if(openRow.size() != 0) { //if no instance of grass nearby move to random open space
                 int randomTile = rand.nextInt(openRow.size());
                 int row = openRow.get(randomTile);
                 int col = openCol.get(randomTile);
                 this.landscape[row][col] = landscape[x][y];
                 delete(x,y);
             }
-        }else if(landscape[x][y] instanceof Wolf){
+        }else if(landscape[x][y] instanceof Wolf){ //same process as sheep searching for food, only the search radius is 3
             Random rand = new Random();
             ArrayList<Integer> sheepRow = new ArrayList<>();
             ArrayList<Integer> sheepCol = new ArrayList<>();
             ArrayList<Integer> openRow = new ArrayList<>();
             ArrayList<Integer> openCol = new ArrayList<>();
-            int o = x-1;
-            int p = y-1;
+            int o = x-3;        //search radius 3
+            int p = y-3;
 
             if(o<0){
                 o+=this.rows;
@@ -332,7 +332,7 @@ public class Landscape {
             }
 
             try {
-                for (int i = o; i < o+6; i++) {
+                for (int i = o; i < o+6; i++) {     //search radius 3 so o-> o+6
                     for (int j = p; j < p + 6; j++) {
                         if (this.landscape[i][j] instanceof Sheep) {
                             sheepRow.add(i);
@@ -347,16 +347,17 @@ public class Landscape {
 
             }
 
-            if(sheepRow.size() != 0) {
+            if(sheepRow.size() != 0) { //if sheep in range go eat it
                 int randomTile = rand.nextInt(sheepRow.size());
                 int row = sheepRow.get(randomTile);
                 int col = sheepCol.get(randomTile);
+                int size = ((Eats)landscape[row][col]).getHunger(); //size depends on how 'fat' the sheep is
                 delete(row, col);
                 this.landscape[row][col] = this.landscape[x][y];
                 delete(x,y);
-                ((Eats)landscape[row][col]).eats(10);
-                System.out.println("Wolf at " +x+ " " +y+ " move to " +row+ " " +col+ " ate sheep so hunger " + ((Eats)landscape[row][col]).getHunger());
-            }else if(openRow.size() != 0) {
+                ((Eats)landscape[row][col]).eats(size);
+                //System.out.println("Wolf at " +x+ " " +y+ " move to " +row+ " " +col+ " ate sheep so hunger " + ((Eats)landscape[row][col]).getHunger()); //for debugging shows when and where a wolf ate a sheep
+            }else if(openRow.size() != 0) { //no sheep in range move randomly
                 int randomTile = rand.nextInt(openRow.size());
                 int row = openRow.get(randomTile);
                 int col = openCol.get(randomTile);
@@ -367,12 +368,12 @@ public class Landscape {
         }
     }
 
-    public void reproduce(int x, int y){
+    public void reproduce(int x, int y){    //search for opposite sex of the same object type and reproduce
         Random rand = new Random();
         ArrayList<Integer> openRow = new ArrayList<>();
         ArrayList<Integer> openCol = new ArrayList<>();
         boolean oppGenderPresent = false;
-        int o = x-1;
+        int o = x-1;        //search radius of 1
         int p = y-1;
 
         if(o<0){
@@ -386,68 +387,69 @@ public class Landscape {
             p=p%this.columns;
         }
         try {
-            for (int i = o ; i < o + 2; i++) {
+            for (int i = o ; i < o + 2; i++) {      //search radius of 1, x-1 -> x+1 or o -> 0+2
                 for (int j = p; j < p + 2; j++) {
-                    if (this.landscape[i][j] == null) {
+                    if (this.landscape[i][j] == null) { // find nearby open spaces that can be popuplated
                         openRow.add(i);
                         openCol.add(j);
-                    } else if (this.landscape[x][y] instanceof Sheep) {
-                        if (this.landscape[i][j] instanceof Sheep && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[i][j]).getGender()) {
+                    } else if (this.landscape[x][y] instanceof Sheep) { //object is sheep
+                        if (this.landscape[i][j] instanceof Sheep && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[i][j]).getGender()) { //look for other sheep of opposite sex
                             oppGenderPresent = true;
                         }
-                    } else if (this.landscape[x][y] instanceof Wolf) {
-                        if (this.landscape[i][j] instanceof Wolf && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[i][j]).getGender()) {
+                    } else if (this.landscape[x][y] instanceof Wolf) { //object is sheep
+                        if (this.landscape[i][j] instanceof Wolf && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[i][j]).getGender()) { //look for other wolf of opposite sex
                             oppGenderPresent = true;
-                        }
+                        }//I found that this is the biggest limiting factor in the reproduction of sheep/wolves. It is extremely hard to guarantee that opposite sexs of the same type will ever come near each other
                     }
                 }
             }
         }catch (ArrayIndexOutOfBoundsException e){
 
         }
-        if(openRow.size() != 0 && oppGenderPresent == true) {
-            int randomTile = rand.nextInt(openRow.size());
-            int row = openRow.get(randomTile);
-            int col = openCol.get(randomTile);
-            if(this.landscape[x][y] instanceof Sheep) {
-                this.landscape[row][col] = new Sheep();
-                ((Eats)this.landscape[x][y]).reproduced();
-                System.out.println("Sheep at " +x+" "+y+" and "+row+" "+col+" reproduced");
-            }else if(this.landscape[x][y] instanceof Wolf){
+        if(openRow.size() != 0 && oppGenderPresent == true) { //if opposite gender found reproduce
+            int randomTile = rand.nextInt(openRow.size()); //pick random emtpy space nearby to populate
+            int row = openRow.get(randomTile);  //empty x cord to populate
+            int col = openCol.get(randomTile);  //empty y cord to populate
+            if(this.landscape[x][y] instanceof Sheep) { //if calling reproduce on a sheep object
+                this.landscape[row][col] = new Sheep(); //create new sheep in open space
+                this.landscape[x][y].reproduced(); //set the initial sheeps repCounter to 5. Figured this was life like seeing as a male could continue in reproduce but a female couldn't until after birth, so only one object needs it counter set
+                //System.out.println("Sheep at " +x+" "+y+" reproduced new sheep at "+row+" "+col);  //for debugging tells when a sheep has reproduced and where the new sheep was place
+            }else if(this.landscape[x][y] instanceof Wolf){ //same process as above only for wolf
                 this.landscape[row][col] = new Wolf();
-                ((Eats)this.landscape[x][y]).reproduced();
-                System.out.println("Wolf at " +x+" "+y+" and "+row+" "+col+" reproduced");
+                this.landscape[x][y].reproduced();
+                //System.out.println("Wolf at " +x+" "+y+" reproduced new wolf at "+row+" "+col); //debugging
             }
         }
     }
 
-    public void step() {
-        int step = this.steps;
+    public void step(int step) { //call all of the necessary functions on each object once per step.
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
-                if (this.landscape[i][j] instanceof Grass) {
-                    if(step%2==0 && landscape[i][j].getSize() > 2) {
-                        spread(i, j);
+                if (this.landscape[i][j] instanceof Grass) { //if grass obj do the following
+                    if(landscape[i][j].getSize() >3 &&landscape[i][j].getReprodCounter() <=2) { //grass can spread if it has size >4 and has only reproduced 3 or less times.
+                        count();
+                        if(this.grassCount<(this.rows*this.columns)/4) { //keep grass population in check by only allowing it to be 1/4 the total area max
+                            spread(i, j); //call function to create new grass in available empty space
+                            landscape[i][j].reproduced(); //increase the number associated with how many times this plant has reproduced
+                        }
+                    }else if(step%2==0) {
+                        landscape[i][j].grow(); //increase the size of the plant every 2 turns. helps control overgrowth of grass in the beginning
                     }
-                    landscape[i][j].grow();
-                }else if(this.landscape[i][j] instanceof Eats){
-                    if(landscape[i][j].getSize() > 15 || ((Eats)landscape[i][j]).getHunger() == 0){
+                }else if(this.landscape[i][j] instanceof Eats){ //if an instance of a sheep or a wolf
+                    if(((Eats)landscape[i][j]).getHunger() == 0){ //if hunger equals 0 the object dies
                         if(landscape[i][j]instanceof Sheep) {
                             System.out.println("Sheep at " + i + " " + j + " dies");
                         }else if(landscape[i][j] instanceof Wolf){
                             System.out.println("Wolf at " + i + " " + j + " dies");
                         }
-                        delete(i,j);
-                    }else {
-                        if(step%2==0) {
-                            landscape[i][j].grow();
-                        }
-                        move(i, j);
+                        delete(i,j); //delete dead object
+                    }else { //as long as the sheep/wolf has hunger above 0
+                        landscape[i][j].grow(); //increase age, decrease huner and reproduction counter
+                        move(i, j);//call move function that will search for food, reproduce or move randomly based on the objects attribute values
                     }
                 }
             }
         }
-        step++;
     }
 }
 

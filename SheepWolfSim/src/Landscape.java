@@ -422,7 +422,7 @@ public class Landscape {
         }
     }
 
-    public void step(int step) { //call all of the necessary functions on each object once per step.
+    public void step(int step) { //call all of the necessary functions on each object once per step. pass value of step for use in controlling rates
         for (int i = 0; i < this.rows; i++) {
             for (int j = 0; j < this.columns; j++) {
                 if (this.landscape[i][j] instanceof Grass) { //if grass obj do the following
@@ -437,10 +437,10 @@ public class Landscape {
                     }
                 }else if(this.landscape[i][j] instanceof Eats){ //if an instance of a sheep or a wolf
                     if(((Eats)landscape[i][j]).getHunger() == 0){ //if hunger equals 0 the object dies
-                        if(landscape[i][j]instanceof Sheep) {
-                            System.out.println("Sheep at " + i + " " + j + " dies");
+                        if(landscape[i][j]instanceof Sheep) { //used for debugging
+                            System.out.println("Sheep at " + i + " " + j + " dies"); //tells when a sheep died from starvation
                         }else if(landscape[i][j] instanceof Wolf){
-                            System.out.println("Wolf at " + i + " " + j + " dies");
+                            System.out.println("Wolf at " + i + " " + j + " dies"); //tells when a wolf died from starvation
                         }
                         delete(i,j); //delete dead object
                     }else { //as long as the sheep/wolf has hunger above 0

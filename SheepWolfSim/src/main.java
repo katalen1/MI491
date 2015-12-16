@@ -7,7 +7,7 @@ public class main {
     public static void main(String args[]) {
         Landscape landscape = new Landscape();
         landscape.clear();
-        landscape.populate(100,50,50);
+        landscape.populate(75,200,50);
         landscape.count();
         landscape.print();
         System.out.println("Grass count: " +landscape.getGrassCount());

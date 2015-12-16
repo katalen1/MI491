@@ -1,0 +1,26 @@
+I found that the grass was spreading too fast in my initial tests, so I added code to reduce the rate at which it grew, thus reducing how fast it could spread, and
+    a maximum number of instances of grass object in the landscape.
+
+Having age be a factor in the death of the Sheep/Wolves was removed because it drastically decreased the length of simulations.
+
+Starting with a high number of Grass/Sheep/Wolves normally ends with a landscape of only grass, as the wolves kill off all of the sheep then die from starvation.
+Starting with a high amount of grass and medium to low amounts of Sheep and Wolves typically allows for the longest simulations. This gives time for the objects
+    to move around reproduce, and eat. Simulations typically end due to the number of Wolves being too high and eating all of the sheep, leaving no food for them
+    which leads to the death of all wolves. I tried to add some code that stopped the Wolves from searching for food when only a few instances of sheep were left on the
+    landscape, this ultimately lead to the death of all of the Wolves, then the Sheep population got out of hand and would eat all of the grass, then they all die off.
+
+Going forward I think what is needed for the simulation to run for 100+ turns would be a function that allows for the re-population of Sheep/Wolves, this way when one
+    population is either killed off by starvation or being eaten you could introduce more instances of that object so that the simulation could keep running.
+
+    TESTED, Results:
+        The problem with this is that the new Sheep/Wolves have full hunger, and for the most part the grass goes untouched and the wolves just run around eating the new sheep before their hunger gets
+        low enough. Or depending on the size of the landscape and depending on the amount of the Sheep/Wolf you repopulate, the wolves can just wonder around and die to starvation.
+
+For some reason it also seems like my spread function prefers to spread only in the upwards direction, even though it uses the same method as my sheep/wolf movement; which
+    does perfectly fine for allowing these object to move in any of the given directions.
+
+The landscape does allow object-wrapping, though for some reason it gets caught up when the index equals the limit for row/col, even though I believe my method for wrapping should have
+    fixed this with if(i>=rows){i=i%rows}.
+
+The first test file contains data from a default run without re-population. Test 1 contains data from a default run with re-pop when there were less than 20 Sheep/Wolves in the landscape.
+    And Test 2 contains data from a run with default settings over 100 turns instead of 50, that repopulated when there were <5 Sheep/Wolves in the landscape.

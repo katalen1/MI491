@@ -24,10 +24,10 @@ public class Landscape {
         this.landscape = new Grows[50][50];
         this.rows = 50;
         this.columns = 50;
-        this.steps = 100;
-        this.grass = 20;
-        this.sheep = 20;
-        this.wolf = 20;
+        this.steps = 50;
+        this.grass = 100;
+        this.sheep = 50;
+        this.wolf = 50;
     }
 
     public Landscape(int rows, int columns, int steps, int grass, int sheep, int wolf){
@@ -53,25 +53,33 @@ public class Landscape {
         return this.steps;
     }
 
-    public int getGrassCount(){
-        return this.grassCount;
+    public int getGrass(){return this.grass;}
+
+    public int getSheep(){return this.sheep;}
+
+    public int getWolf(){return this.wolf;}
+
+    public int getSheepCnt(){return this.sheepCount;}
+
+    public int getWolfCnt(){return this.wolfCount;}
+
+    public void getGrassCount(){
+        System.out.println("Grass: " + this.grassCount);
     }
 
-    public int getSheepCount(){
-        return this.sheepCount;
+    public void getSheepCount(){
+        System.out.println("Sheep: "+ this.sheepCount + " M: "+this.mSheep+ " F: "+this.fSheep);
     }
 
-    public int getWolfCount(){
-        return this.wolfCount;
+    public void getWolfCount(){
+        System.out.println("Wolves: "+ this.wolfCount + " M: "+this.mWolf+ " F: "+this.fWolf);
     }
 
-    public int getMSheep(){return this.mSheep;}
+    public String returnCounts(){
+        return "Grass: " +this.grassCount+ " Sheep: " +this.sheepCount+ " Wolves: " +wolfCount;
+    }
 
-    public int getFSheep(){return this.fSheep;}
 
-    public int getMWolf(){return this.mWolf;}
-
-    public int getFWolf(){return this.fWolf;}
 
     public void clear(){
         for(int i=0; i<this.rows; i++){
@@ -85,6 +93,31 @@ public class Landscape {
         this.landscape[X][Y] = null;
     }  //delete an eaten object o
 
+    public void repopSheep(int sheep){
+        Random rand = new Random();
+
+        while (sheep != 0) {  //same method as above
+            int randomRow = rand.nextInt(this.rows);
+            int randomColumn = rand.nextInt(this.columns);
+            if (this.landscape[randomRow][randomColumn] == null) {
+                this.landscape[randomRow][randomColumn] = new Sheep();
+                sheep -= 1;
+            }
+        }
+    }
+
+    public void repopWolf(int wolf){
+        Random rand = new Random();
+
+        while (wolf != 0) {
+            int randomRow = rand.nextInt(this.rows);
+            int randomColumn = rand.nextInt(this.columns);
+            if (this.landscape[randomRow][randomColumn] == null) {
+                this.landscape[randomRow][randomColumn] = new Wolf();
+                wolf -= 1;
+            }
+        }
+    }
 
    public void populate(int grass, int sheep, int wolf){
 
@@ -128,7 +161,7 @@ public class Landscape {
         this.mSheep =0;
         this.fSheep =0;
         this.mWolf =0;
-        this.fSheep =0;
+        this.fWolf =0;
 
         for(int i=0; i<this.rows; i++){
             for(int j=0; j<this.columns; j++){
@@ -180,31 +213,32 @@ public class Landscape {
             for (int i=X-1; i < X + 1; i++) {
                 for (int j = Y-1; j < Y + 1; j++) {
 
+                    int k =i;
+                    int l =j;
                     if(i<0){                //screen wrapping
-                        i+=this.rows;
-                    }else if(i>this.rows){
-                        i=i%this.rows;
+                        k= i+this.rows;
+                    }else if(i>=this.rows){
+                        k=i%this.rows;
                     }
                     if(j<0){
-                        j+=this.rows;
-                    }else if(j>this.rows){
-                        j=j%this.rows;
+                        l= j+ this.columns;
+                    }else if(j>=this.columns){
+                        l=j%this.columns;
                     }
 
-                    if (this.landscape[i][j] == null) { //if block is empty add its position to the arrays
-                        openRow.add(i); //add x cord to array
-                        openCol.add(j); //add y cord to array
+                    if (this.landscape[k][l] == null) { //if block is empty add its position to the arrays
+                        openRow.add(k); //add x cord to array
+                        openCol.add(l); //add y cord to array
                     }
                 }
             }
         }catch (ArrayIndexOutOfBoundsException e){
-
+            //e.printStackTrace();    //All instances occur when the value is the max length of row or column, not sure why this occurs.
         }
         if(openRow.size() != 0) { //as long as there is an open space around, pick one randomly and then populate it with a new instance of grass
             int randomTile = rand.nextInt(openRow.size());
             int row = openRow.get(randomTile);
             int col = openCol.get(randomTile);
-            delete(row, col);
             this.landscape[row][col] = new Grass();
         }
     }
@@ -225,13 +259,13 @@ public class Landscape {
 
                 if(o<0){
                     o+=this.rows;
-                }else if(x>this.rows){
+                }else if(x>=this.rows){
                     o=o%this.rows;
                 }
                 if(p<0){
-                    p+=this.rows;
-                }else if(p>this.rows){
-                    p=p%this.rows;
+                    p+=this.columns;
+                }else if(p>=this.columns){
+                    p=p%this.columns;
                 }
 
                 try {
@@ -244,7 +278,7 @@ public class Landscape {
                         }
                     }
                 }catch (ArrayIndexOutOfBoundsException e){
-
+                    //e.printStackTrace();    //All instances occur when the value is the max length of row or column, not sure why this occurs.
                 }
                 if(openRow.size() != 0) {
                     int randomTile = rand.nextInt(openRow.size());
@@ -271,12 +305,12 @@ public class Landscape {
 
                 if(o<0){
                     o+=this.rows;
-                }else if(x>this.rows){
+                }else if(x>=this.rows){
                     o=o%this.rows;
                 }
                 if(p<0){
                     p+=this.columns;
-                }else if(p>this.columns){
+                }else if(p>=this.columns){
                     p=p%this.columns; //wrapping
                 }
                 for (int i = o; i < o + 4; i++) {       //search radius 2 so we want x-2 -> x +2 or o -> o+4
@@ -291,7 +325,7 @@ public class Landscape {
                     }
                 }
             }catch (ArrayIndexOutOfBoundsException e){
-
+                //e.printStackTrace();    //All instances occur when the value is the max length of row or column, not sure why this occurs.
             }
 
             if(grassRow.size() != 0) { //if there is a grass object in range
@@ -322,12 +356,12 @@ public class Landscape {
 
             if(o<0){
                 o+=this.rows;
-            }else if(x>this.rows){
+            }else if(x>=this.rows){
                 o=o%this.rows;
             }
             if(p<0){
                 p+=this.columns;
-            }else if(p>this.columns){
+            }else if(p>=this.columns){
                 p=p%this.columns;
             }
 
@@ -344,7 +378,7 @@ public class Landscape {
                     }
                 }
             }catch (ArrayIndexOutOfBoundsException e){
-
+                //e.printStackTrace();    //All instances occur when the value is the max length of row or column, not sure why this occurs.
             }
 
             if(sheepRow.size() != 0) { //if sheep in range go eat it
@@ -378,12 +412,12 @@ public class Landscape {
 
         if(o<0){
             o+=this.rows;
-        }else if(o>this.rows){
+        }else if(o>=this.rows){
             o=o%this.rows;
         }
         if(p<0){
             p+=this.columns;
-        }else if(p>this.columns){
+        }else if(p>=this.columns){
             p=p%this.columns;
         }
         try {
@@ -404,7 +438,7 @@ public class Landscape {
                 }
             }
         }catch (ArrayIndexOutOfBoundsException e){
-
+            //e.printStackTrace();    //All instances occur when the value is the max length of row or column, not sure why this occurs.
         }
         if(openRow.size() != 0 && oppGenderPresent == true) { //if opposite gender found reproduce
             int randomTile = rand.nextInt(openRow.size()); //pick random emtpy space nearby to populate
@@ -413,7 +447,7 @@ public class Landscape {
             if(this.landscape[x][y] instanceof Sheep) { //if calling reproduce on a sheep object
                 this.landscape[row][col] = new Sheep(); //create new sheep in open space
                 this.landscape[x][y].reproduced(); //set the initial sheeps repCounter to 5. Figured this was life like seeing as a male could continue in reproduce but a female couldn't until after birth, so only one object needs it counter set
-                //System.out.println("Sheep at " +x+" "+y+" reproduced new sheep at "+row+" "+col);  //for debugging tells when a sheep has reproduced and where the new sheep was place
+                //System.out.println("Sheep at " +x+" "+y+" reproduced new sheep at "+row+" "+col+" repCount"+ landscape[x][y].getReprodCounter());  //for debugging tells when a sheep has reproduced and where the new sheep was place
             }else if(this.landscape[x][y] instanceof Wolf){ //same process as above only for wolf
                 this.landscape[row][col] = new Wolf();
                 this.landscape[x][y].reproduced();
@@ -436,15 +470,15 @@ public class Landscape {
                         landscape[i][j].grow(); //increase the size of the plant every 2 turns. helps control overgrowth of grass in the beginning
                     }
                 }else if(this.landscape[i][j] instanceof Eats){ //if an instance of a sheep or a wolf
-                    if(((Eats)landscape[i][j]).getHunger() == 0){ //if hunger equals 0 the object dies
-                        if(landscape[i][j]instanceof Sheep) { //used for debugging
+                    if(((Eats)landscape[i][j]).getHunger() == 0){ //if hunger equals 0 the object dies, took age death out because it was one of the reasons simulations only lasted 15/20 turns
+                        /*if(landscape[i][j]instanceof Sheep) { //used for debugging
                             System.out.println("Sheep at " + i + " " + j + " dies"); //tells when a sheep died from starvation
                         }else if(landscape[i][j] instanceof Wolf){
                             System.out.println("Wolf at " + i + " " + j + " dies"); //tells when a wolf died from starvation
-                        }
+                        }*/
                         delete(i,j); //delete dead object
                     }else { //as long as the sheep/wolf has hunger above 0
-                        landscape[i][j].grow(); //increase age, decrease huner and reproduction counter
+                        landscape[i][j].grow(); //increase age, decrease hunger and reproduction counter
                         move(i, j);//call move function that will search for food, reproduce or move randomly based on the objects attribute values
                     }
                 }

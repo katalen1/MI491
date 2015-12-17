@@ -254,26 +254,28 @@ public class Landscape {
                 ArrayList<Integer> openRow = new ArrayList<>();
                 ArrayList<Integer> openCol = new ArrayList<>();
 
-                int o = x-((Eats)landscape[x][y]).getSearchRad();
-                int p = y-((Eats)landscape[x][y]).getSearchRad();
-
-                if(o<0){
-                    o+=this.rows;
-                }else if(x>=this.rows){
-                    o=o%this.rows;
-                }
-                if(p<0){
-                    p+=this.columns;
-                }else if(p>=this.columns){
-                    p=p%this.columns;
-                }
 
                 try {
-                    for (int i = o; i < o + ((Eats)landscape[x][y]).getSearchRad()*2; i++) {
-                        for (int j = p; j < p +((Eats)landscape[x][y]).getSearchRad()*2; j++) {
-                            if (this.landscape[i][j] == null) {
-                                openRow.add(i);
-                                openCol.add(j);
+                    for (int i = x-((Eats)landscape[x][y]).getSearchRad(); i < x+((Eats)landscape[x][y]).getSearchRad(); i++) {
+                        for (int j = y-((Eats)landscape[x][y]).getSearchRad(); j < y+((Eats)landscape[x][y]).getSearchRad(); j++) {
+
+                            int o = i;
+                            int p = j;
+
+                            if(o<0){
+                                o+=this.rows;
+                            }else if(x>=this.rows){
+                                o=o%this.rows;
+                            }
+                            if(p<0){
+                                p+=this.columns;
+                            }else if(p>=this.columns){
+                                p=p%this.columns;
+                            }
+
+                            if (this.landscape[o][p] == null) {
+                                openRow.add(o);
+                                openCol.add(p);
                             }
                         }
                     }
@@ -300,27 +302,30 @@ public class Landscape {
             ArrayList<Integer> openCol = new ArrayList<>(); //stores y cord of open space
 
             try {
-                int o = x-2;        //wrapping
-                int p = y-2;        //search radius 2
 
-                if(o<0){
-                    o+=this.rows;
-                }else if(x>=this.rows){
-                    o=o%this.rows;
-                }
-                if(p<0){
-                    p+=this.columns;
-                }else if(p>=this.columns){
-                    p=p%this.columns; //wrapping
-                }
-                for (int i = o; i < o + 4; i++) {       //search radius 2 so we want x-2 -> x +2 or o -> o+4
-                    for (int j = p; j < p + 4; j++) {
-                        if (this.landscape[i][j] instanceof Grass) { //search for grass in range
-                            grassRow.add(i);    //add x cord of grass
-                            grassCol.add(j);    //add y cord of grass
-                        }else if (this.landscape[i][j] == null) {
-                            openRow.add(i);     //add x cord of open space
-                            openCol.add(j);     //add y cord of openspace
+                for (int i = x-2; i < x+2; i++) {       //search radius 2
+                    for (int j = y-2; j < y+2; j++) {
+
+                        int o = i;
+                        int p = j;
+
+                        if(o<0){
+                            o+=this.rows;
+                        }else if(x>=this.rows){
+                            o=o%this.rows;
+                        }
+                        if(p<0){
+                            p+=this.columns;
+                        }else if(p>=this.columns){
+                            p=p%this.columns;
+                        }
+
+                        if (this.landscape[o][p] instanceof Grass) { //search for grass in range
+                            grassRow.add(o);    //add x cord of grass
+                            grassCol.add(p);    //add y cord of grass
+                        }else if (this.landscape[o][p] == null) {
+                            openRow.add(o);     //add x cord of open space
+                            openCol.add(p);     //add y cord of openspace
                         }
                     }
                 }
@@ -351,29 +356,31 @@ public class Landscape {
             ArrayList<Integer> sheepCol = new ArrayList<>();
             ArrayList<Integer> openRow = new ArrayList<>();
             ArrayList<Integer> openCol = new ArrayList<>();
-            int o = x-3;        //search radius 3
-            int p = y-3;
-
-            if(o<0){
-                o+=this.rows;
-            }else if(x>=this.rows){
-                o=o%this.rows;
-            }
-            if(p<0){
-                p+=this.columns;
-            }else if(p>=this.columns){
-                p=p%this.columns;
-            }
 
             try {
-                for (int i = o; i < o+6; i++) {     //search radius 3 so o-> o+6
-                    for (int j = p; j < p + 6; j++) {
-                        if (this.landscape[i][j] instanceof Sheep) {
-                            sheepRow.add(i);
-                            sheepCol.add(j);
-                        }else if (this.landscape[i][j] == null) {
-                            openRow.add(i);
-                            openCol.add(j);
+                for (int i = x-3; i < x+3; i++) {     //search radius 3
+                    for (int j = y-3; j < y+3; j++) {
+
+                        int o = i;
+                        int p = j;
+
+                        if(o<0){
+                            o+=this.rows;
+                        }else if(x>=this.rows){
+                            o=o%this.rows;
+                        }
+                        if(p<0){
+                            p+=this.columns;
+                        }else if(p>=this.columns){
+                            p=p%this.columns;
+                        }
+
+                        if (this.landscape[o][p] instanceof Sheep) {
+                            sheepRow.add(o);
+                            sheepCol.add(p);
+                        }else if (this.landscape[o][p] == null) {
+                            openRow.add(o);
+                            openCol.add(p);
                         }
                     }
                 }
@@ -407,31 +414,34 @@ public class Landscape {
         ArrayList<Integer> openRow = new ArrayList<>();
         ArrayList<Integer> openCol = new ArrayList<>();
         boolean oppGenderPresent = false;
-        int o = x-1;        //search radius of 1
-        int p = y-1;
 
-        if(o<0){
-            o+=this.rows;
-        }else if(o>=this.rows){
-            o=o%this.rows;
-        }
-        if(p<0){
-            p+=this.columns;
-        }else if(p>=this.columns){
-            p=p%this.columns;
-        }
         try {
-            for (int i = o ; i < o + 2; i++) {      //search radius of 1, x-1 -> x+1 or o -> 0+2
-                for (int j = p; j < p + 2; j++) {
-                    if (this.landscape[i][j] == null) { // find nearby open spaces that can be popuplated
-                        openRow.add(i);
-                        openCol.add(j);
+            for (int i = x-1 ; i < x+1; i++) {      //search radius of 1, x-1 -> x+1 or o -> 0+2
+                for (int j = y-1; j < y+1; j++) {
+
+                    int o = i;        //search radius of 1
+                    int p = j;
+
+                    if(o<0){
+                        o+=this.rows;
+                    }else if(o>=this.rows){
+                        o=o%this.rows;
+                    }
+                    if(p<0){
+                        p+=this.columns;
+                    }else if(p>=this.columns){
+                        p=p%this.columns;
+                    }
+
+                    if (this.landscape[o][p] == null) { // find nearby open spaces that can be popuplated
+                        openRow.add(o);
+                        openCol.add(p);
                     } else if (this.landscape[x][y] instanceof Sheep) { //object is sheep
-                        if (this.landscape[i][j] instanceof Sheep && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[i][j]).getGender()) { //look for other sheep of opposite sex
+                        if (this.landscape[o][p] instanceof Sheep && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[o][p]).getGender()) { //look for other sheep of opposite sex
                             oppGenderPresent = true;
                         }
-                    } else if (this.landscape[x][y] instanceof Wolf) { //object is sheep
-                        if (this.landscape[i][j] instanceof Wolf && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[i][j]).getGender()) { //look for other wolf of opposite sex
+                    } else if (this.landscape[o][p] instanceof Wolf) { //object is sheep
+                        if (this.landscape[o][p] instanceof Wolf && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[o][p]).getGender()) { //look for other wolf of opposite sex
                             oppGenderPresent = true;
                         }//I found that this is the biggest limiting factor in the reproduction of sheep/wolves. It is extremely hard to guarantee that opposite sexs of the same type will ever come near each other
                     }

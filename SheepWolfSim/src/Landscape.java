@@ -416,10 +416,10 @@ public class Landscape {
         boolean oppGenderPresent = false;
 
         try {
-            for (int i = x-1 ; i < x+1; i++) {      //search radius of 1, x-1 -> x+1 or o -> 0+2
+            for (int i = x-1 ; i < x+1; i++) {      //search radius of 1
                 for (int j = y-1; j < y+1; j++) {
 
-                    int o = i;        //search radius of 1
+                    int o = i;
                     int p = j;
 
                     if(o<0){
@@ -440,7 +440,7 @@ public class Landscape {
                         if (this.landscape[o][p] instanceof Sheep && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[o][p]).getGender()) { //look for other sheep of opposite sex
                             oppGenderPresent = true;
                         }
-                    } else if (this.landscape[o][p] instanceof Wolf) { //object is sheep
+                    } else if (this.landscape[x][y] instanceof Wolf) { //object is sheep
                         if (this.landscape[o][p] instanceof Wolf && ((Eats) landscape[x][y]).getGender() != ((Eats) landscape[o][p]).getGender()) { //look for other wolf of opposite sex
                             oppGenderPresent = true;
                         }//I found that this is the biggest limiting factor in the reproduction of sheep/wolves. It is extremely hard to guarantee that opposite sexs of the same type will ever come near each other
